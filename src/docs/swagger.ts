@@ -13,7 +13,7 @@ const swaggerOptions = {
         },
         servers: [
             {
-                url: "https://tinyurl-92c4.onrender.com/"
+                url: "https://turl.onrender.com/"
             },
             {
                 url: "http://localhost:8000/"
