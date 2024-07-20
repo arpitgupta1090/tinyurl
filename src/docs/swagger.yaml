@@ -1,0 +1,355 @@
+paths:
+  /signup/:              
+    post:
+      tags:
+        - User
+      summary: creates a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/signUp'
+      responses: 
+        201:
+          description: Data with user details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/SuccessResponse'
+        422:
+          $ref: '#/components/responses/422'
+        500:
+          $ref: '#/components/responses/500'
+
+  /login/:              
+    post:
+      tags:
+        - User
+      summary: Login and get token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/login'
+      responses: 
+        200:
+          description: User Id with token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/SuccessResponse'
+        400:
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/ErrorResponse'
+        422:
+          $ref: '#/components/responses/422'
+        500:
+          $ref: '#/components/responses/500'
+
+  /:              
+    patch:
+      security:
+        - AuthHeader: [ ]
+      tags:
+        - User
+      summary: Update userName or Password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/update'
+      responses: 
+        200:
+          description: User Id with token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/SuccessResponse'
+        401:
+          $ref: '#/components/responses/401'
+        404:
+          $ref: '#/components/responses/404'
+        422:
+          $ref: '#/components/responses/422'
+        500:
+          $ref: '#/components/responses/500'
+
+  /users:              
+    get:
+      security:
+        - AuthHeader: [ ]
+      tags:
+        - Admin
+      summary: get all users
+      responses: 
+        200:
+          description: User data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/SuccessResponse'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        500:
+          $ref: '#/components/responses/500'
+
+  /users/{id}:              
+    get:
+      security:
+        - AuthHeader: [ ]
+      tags:
+        - Admin
+      summary: get an user
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses: 
+        200:
+          description: User data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/SuccessResponse'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+    delete:
+      security:
+        - AuthHeader: [ ]
+      tags:
+        - Admin
+      summary: delete an user
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses: 
+        200:
+          description: User data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/SuccessResponse'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+
+  /users/{id}/activate:              
+    put:
+      security:
+        - AuthHeader: [ ]
+      tags:
+        - Admin
+      summary: activate an user
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses: 
+        200:
+          description: User data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/SuccessResponse'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+
+  /users/{id}/admin:              
+    put:
+      security:
+        - AuthHeader: [ ]
+      tags:
+        - Admin
+      summary: promote an user to admin role
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses: 
+        200:
+          description: User data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/SuccessResponse'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+                  
+  /url:              
+    post:
+      security:
+        - AuthHeader: [ ]
+      tags:
+        - Url
+      summary: creates a short url
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/url'
+      responses: 
+        201:
+          description: Data with short url
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/SuccessResponse'
+        422:
+          $ref: '#/components/responses/422'
+        500:
+          $ref: '#/components/responses/500'
+  /url/{shortUrl}:              
+    get:
+      security:
+        - AuthHeader: [ ]
+      tags:
+        - Url
+      summary: get a long url
+      parameters:
+        - name: shortUrl
+          in: path
+          required: True
+          schema:
+            type: string
+      responses: 
+        201:
+          description: Data with long url
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/SuccessResponse'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+
+components:
+  securitySchemes:
+    AuthHeader: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    id:
+      name: id
+      in: path
+      description: id of the user
+      required: True
+      schema:
+        type: integer
+        format: int64
+
+  schemas:       # Schema definition for request body
+    signUp:
+      type: object
+      properties:
+        userName:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+    login:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+    update:
+      type: object
+      properties:
+        userName:
+          type: string
+        password:
+          type: string
+    url:
+      type: object
+      properties:
+        longUrl:
+          type: string
+
+  responses:
+    SuccessResponse:
+      type: object
+      properties:
+        data:
+          type: object
+        message:
+          type: string
+        status:
+          type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        data:
+          type: object
+        message:
+            oneOf:
+            - type: object
+            - type: string
+        status:
+          type: string
+
+    401:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/responses/ErrorResponse'
+    
+    403:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/responses/ErrorResponse'
+    
+    404:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/responses/ErrorResponse'
+
+    422:
+      description: Unprocessable Entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/responses/ErrorResponse'
+
+    500:
+          description: INTERNAL SERVER ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/ErrorResponse'
