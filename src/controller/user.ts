@@ -3,7 +3,7 @@ import UserService from "../services/user";
 import jwt from 'jsonwebtoken';
 import dotEnv from 'dotenv'; 
 import { UnauthorizedError, NotFoundError } from "../responses/customErrors";
-import { successResponse } from "../responses/customResponse";
+import { successResponse, createdResponse } from "../responses/customResponse";
 
 dotEnv.config({path: './.env'});
 const service:UserService = new UserService();
@@ -14,7 +14,7 @@ class UserControler {
         try {
             const {userName, email, password} = request.body
             const user = await service.create(userName, email, password)
-            successResponse(response, user, "user created successfully")
+            createdResponse(response, user, "user created successfully")
         }
         catch (error) {
             next(error)
